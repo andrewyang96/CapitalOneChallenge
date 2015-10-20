@@ -13,8 +13,26 @@ def fetchLatestMedia(tag_name, max_age=7):
         filtered = filter(lambda media: media.created_time > oldest_dt, more_media)
         media.extend(filtered)
         if len(filtered) != len(more_media):
-            return media
+            break
+    print "Returning", len(media), "items with tag", tag_name
     return media
 
-# Fetch 20 most recent posts with #CapitalOne tag
-capitalone = fetchLatestMedia("capitalone", 7)
+def fetchMediaInfo(media):
+    # fetch these info from each media:
+    #   type
+    #   thumbnail URL
+    #   high-res URL
+    #   comments
+    #   user
+    #   created time
+    return {
+        'type': media.type,
+        'thumbnail': media.get_thumbnail_url(),
+        'link': media.get_standard_resolution_url(),
+        'comments': media.comments,
+        'user': media.user,
+        'created_time': media.created_time
+    }
+
+capitalonemedia = fetchLatestMedia("capitalone", 7)
+capitalone = map(fetchMediaInfo, capitalonemedia)
