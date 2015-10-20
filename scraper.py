@@ -1,9 +1,10 @@
 from instagram.client import InstagramAPI
-#from alchemyapi import AlchemyAPI
+from alchemyapi import AlchemyAPI
 from datetime import datetime, timedelta
+import math
 
 api = InstagramAPI(client_id='64de641b01d648779939696d77ccff38', client_secret='043233db9a2c4c13a40a442c7bee0c43')
-#alchemyapi = AlchemyAPI()
+alchemyapi = AlchemyAPI()
 
 def fetchLatestMedia(tag_name, max_age=7):
     # tag_name - the hashtag name
@@ -27,7 +28,6 @@ def fetchMediaInfo(media):
     #   high-res URL
     #   caption text
     #   num likes
-    #   comments
     #   user
     #   created time
     return {
@@ -36,7 +36,6 @@ def fetchMediaInfo(media):
         'link': media.get_standard_resolution_url(),
         'caption': media.caption.text,
         'like_count': media.like_count,
-        'comments': media.comments,
         'user': media.user,
         'created_time': media.created_time
     }
@@ -82,11 +81,22 @@ def fetchUserInfo(user):
         'following': countUserFollowing(user)
     }
 
+def getUserInfluence(user):
+    # returns user influence score based on this formula:
+    # sqrt(user_posts) * (user_followers / user_following) * math.log(user_followers+1, 2)
+    userInfo = fetchUserInfo(user)
+    return math.sqrt(user['posts']) * (user['followers']/float(user['following'])) * math.log(user['followers']+1, 2)
+
 def analyzeSentiment(media):
     # uses AlchemyAPI's sentiment analysis to parse sentiment into a raw score
     # prepend string with a period (.) if first character is a hash (#)
     comments = map(lambda comment: comment.text, media['comments'])
     pass # TODO
+
+def calculateScore(media):
+    user = media['user']
+    influence = getUserInfluence(user)
+    # TODO: analyze sentiment and return
 
 capitalonemedia = fetchLatestMedia("CapitalOne", 7)
 capitalone = map(fetchMediaInfo, capitalonemedia)
