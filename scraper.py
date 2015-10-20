@@ -1,6 +1,9 @@
 from instagram.client import InstagramAPI
+from alchemyapi import AlchemyAPI
 from datetime import datetime, timedelta
+
 api = InstagramAPI(client_id='64de641b01d648779939696d77ccff38', client_secret='043233db9a2c4c13a40a442c7bee0c43')
+alchemyapi = AlchemyAPI()
 
 def fetchLatestMedia(tag_name, max_age=7):
     # tag_name - the hashtag name
@@ -22,6 +25,7 @@ def fetchMediaInfo(media):
     #   type
     #   thumbnail URL
     #   high-res URL
+    #   caption text
     #   comments
     #   user
     #   created time
@@ -29,10 +33,17 @@ def fetchMediaInfo(media):
         'type': media.type,
         'thumbnail': media.get_thumbnail_url(),
         'link': media.get_standard_resolution_url(),
+        'caption': media.caption.text,
         'comments': media.comments,
         'user': media.user,
         'created_time': media.created_time
     }
 
-capitalonemedia = fetchLatestMedia("capitalone", 7)
+def analyzeSentiment(media):
+    # uses AlchemyAPI's sentiment analysis to parse sentiment into a raw score
+    # prepend string with a period (.) if first character is a hash (#)
+    comments = map(lambda comment: comment.text, media['comments'])
+    pass # TODO
+
+capitalonemedia = fetchLatestMedia("CapitalOne", 7)
 capitalone = map(fetchMediaInfo, capitalonemedia)
