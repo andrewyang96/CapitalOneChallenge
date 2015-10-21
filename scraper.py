@@ -146,7 +146,7 @@ sentimentCounts = {
     'positive': 0,
     'error': 0
 }
-totalScore = 0
+totalScore = 0.0
 
 for media in capitalone:
     print media['caption']
@@ -165,8 +165,8 @@ for media in capitalone:
     print "The post's sentiment is", sentimentType, "with a score", sentimentScore
     print
 
-output['total_score'] = totalScore
-print "Total Score:", totalScore
+output['avg_score'] = round(totalScore / len(capitalone), 1)
+print "Average Score:", output['avg_score']
 output['sentiment_counts'] = sentimentCounts
 print "Sentiment counts:", sentimentCounts
 output['time'] = datetime.now().__str__()
