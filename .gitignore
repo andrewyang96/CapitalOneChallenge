@@ -57,3 +57,4 @@ docs/_build/
 target/
 
 api_key.txt
+results.json
