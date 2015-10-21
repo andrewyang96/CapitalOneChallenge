@@ -85,18 +85,36 @@ def getUserInfluence(user):
     # returns user influence score based on this formula:
     # sqrt(user_posts) * (user_followers / user_following) * math.log(user_followers+1, 2)
     userInfo = fetchUserInfo(user)
-    return math.sqrt(user['posts']) * (user['followers']/float(user['following'])) * math.log(user['followers']+1, 2)
+    return math.sqrt(userInfo['posts']) * (userInfo['followers']/float(userInfo['following'])) * math.log(userInfo['followers']+1, 2)
 
 def analyzeSentiment(media):
     # uses AlchemyAPI's sentiment analysis to parse sentiment into a raw score
     # prepend string with a period (.) if first character is a hash (#)
-    comments = map(lambda comment: comment.text, media['comments'])
-    pass # TODO
+    sentiment = alchemyapi.sentiment('text', media['caption'])
+    if sentiment['status'] != 'OK':
+        raise Exception(sentiment['statusInfo'])
+    try:
+        return (float(sentiment['docSentiment']['score']), sentiment['docSentiment']['type'])
+    except KeyError:
+        return (0.0, 'neutral')
 
 def calculateScore(media):
     user = media['user']
     influence = getUserInfluence(user)
-    # TODO: analyze sentiment and return
+    try:
+        sentiment, type_ = analyzeSentiment(media)
+    except Exception, e:
+        print "Error getting sentiment:", e
+        sentiment, type_ = 0.0, 'neutral'
+    return {
+        'score': influence * sentiment,
+        'type': type_
+    }
 
 capitalonemedia = fetchLatestMedia("CapitalOne", 7)
 capitalone = map(fetchMediaInfo, capitalonemedia)
+print "Calculating scores"
+for media in capitalone:
+    print media['caption']
+    print calculateScore(media)
+    print
