@@ -58,3 +58,5 @@ target/
 
 api_key.txt
 results.json
+venv/
+
