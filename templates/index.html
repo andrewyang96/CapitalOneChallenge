@@ -1,14 +1,14 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
-		<title>&pound;CapitalOne Challenge</title>
-		<link rel="stylesheet" href="style.css">
+		<title>&#35;CapitalOne Challenge</title>
+		<link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
 	</head>
 	<body>
 		<h1>Hi</h1>
 
 		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-		<script src="script.js"></script>
+		<script src={{ url_for('static', filename='script.js') }}></script>
 	</body>
 </html>
