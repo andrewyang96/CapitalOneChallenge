@@ -1,6 +1,17 @@
-from flask import Flask, url_for, render_template
+from flask import Flask, url_for, render_template, jsonify
+from apscheduler.schedulers.background import BackgroundScheduler
+from scraper.scraper import scrape
+
+from datetime import datetime
 
 app = Flask(__name__)
+scheduler = BackgroundScheduler()
+scheduler.start()
+
+instagram_data = {}
+def instagram_scrape():
+    instagram_data = scrape(days=0.5)
+scrape_job = scheduler.add_job(scrape, 'cron', minute=0)
 
 # End database methods
 
@@ -12,7 +23,9 @@ def index(name=None):
 
 # Begin API methods
 
-# TODO
+@app.route('/debug')
+def debug(name=None):
+    return jsonify(instagram_data)
 
 # End API methods
 

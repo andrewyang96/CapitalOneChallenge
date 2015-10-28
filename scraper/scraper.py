@@ -133,9 +133,9 @@ def serializeUser(user):
         'username': user.username
     }
 
-def scrape():
+def scrape(days=7):
     print "Fetching latest posts about #CapitalOne"
-    capitalonemedia = fetchLatestMedia("CapitalOne", 2)
+    capitalonemedia = fetchLatestMedia("CapitalOne", days)
     print "Processing latest posts about #CapitalOne"
     capitalone = map(fetchMediaInfo, capitalonemedia)
 

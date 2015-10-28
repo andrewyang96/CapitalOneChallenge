@@ -5,7 +5,15 @@
 		<link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
 	</head>
 	<body>
-		<h1>Hi</h1>
+		<h1>CapitalOne Sentiment on Instagram</h1>
+
+		<h2>Sentiment Score: <span id="sentiment-score"></span></h2>
+		<h3>Positive Posts: <span id="positive"></span></h3>
+		<h3>Negative Posts: <span id="negative"></span></h3>
+		<h3>Neutral Posts: <span id="neutral"></span></h3>
+
+		<p>Last Updated: <span id="last-updated"></span></p>
+		<p>This page updates every two hours.</p>
 
 		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
