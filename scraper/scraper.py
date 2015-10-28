@@ -133,47 +133,51 @@ def serializeUser(user):
         'username': user.username
     }
 
-print "Fetching latest posts about #CapitalOne"
-capitalonemedia = fetchLatestMedia("CapitalOne", 2)
-print "Processing latest posts about #CapitalOne"
-capitalone = map(fetchMediaInfo, capitalonemedia)
+def scrape():
+    print "Fetching latest posts about #CapitalOne"
+    capitalonemedia = fetchLatestMedia("CapitalOne", 2)
+    print "Processing latest posts about #CapitalOne"
+    capitalone = map(fetchMediaInfo, capitalonemedia)
 
-print "Calculating scores"
-output = { 'posts': [] }
-sentimentCounts = {
-    'negative': 0,
-    'neutral': 0,
-    'positive': 0,
-    'error': 0
-}
-totalScore = 0.0
+    print "Calculating scores"
+    output = { 'posts': [] }
+    sentimentCounts = {
+        'negative': 0,
+        'neutral': 0,
+        'positive': 0,
+        'error': 0
+    }
+    totalScore = 0.0
 
-for media in capitalone:
-    print media['caption']
-    # process sentiment details
-    sentimentDetails = calculateScore(media)
-    sentimentScore = sentimentDetails['score']
-    sentimentType = sentimentDetails['type']
-    totalScore += sentimentScore
-    sentimentCounts[sentimentType] += 1
-    # append to output results object
-    media['sentiment_score'] = sentimentScore
-    media['sentiment_type'] = sentimentType
-    media['user'] = serializeUser(media['user'])
-    media['created_time'] = media['created_time'].__str__()
-    output['posts'].append(media)
-    print "The post's sentiment is", sentimentType, "with a score", sentimentScore
-    print
+    for media in capitalone:
+        print media['caption']
+        # process sentiment details
+        sentimentDetails = calculateScore(media)
+        sentimentScore = sentimentDetails['score']
+        sentimentType = sentimentDetails['type']
+        totalScore += sentimentScore
+        sentimentCounts[sentimentType] += 1
+        # append to output results object
+        media['sentiment_score'] = sentimentScore
+        media['sentiment_type'] = sentimentType
+        media['user'] = serializeUser(media['user'])
+        media['created_time'] = media['created_time'].__str__()
+        output['posts'].append(media)
+        print "The post's sentiment is", sentimentType, "with a score", sentimentScore
+        print
 
-output['avg_score'] = round(totalScore / len(capitalone), 1)
-print "Average Score:", output['avg_score']
-output['sentiment_counts'] = sentimentCounts
-print "Sentiment counts:", sentimentCounts
-output['time'] = datetime.now().__str__()
-print "Finished script at", output['time']
+    output['avg_score'] = round(totalScore / len(capitalone), 1)
+    print "Average Score:", output['avg_score']
+    output['sentiment_counts'] = sentimentCounts
+    print "Sentiment counts:", sentimentCounts
+    output['time'] = datetime.now().__str__()
+    print "Finished script at", output['time']
 
-with open(OUTFILE, "w") as outf:
-    print "Dumping output to", OUTFILE
-    json.dump(output, outf)
+    with open(OUTFILE, "w") as outf:
+        print "Dumping output to", OUTFILE
+        json.dump(output, outf)
 
-print "Done!"
+    print "Done!"
+
+if __name__ == "__main__":
+    scrape()
